@@ -14,9 +14,11 @@ const Users = () => {
     )
   const renderPhrase = (countUser) => {
     const lastNumber = countUser % 10
+    const lastTwoNumber = countUser % 100
     const numbers = [2, 3, 4]
     const ignoreNumbers = [12, 13, 14]
-    return ignoreNumbers.includes(countUser) || !numbers.includes(lastNumber)
+    return ignoreNumbers.includes(lastTwoNumber) ||
+      !numbers.includes(lastNumber)
       ? 'человек тусанёт'
       : 'человека тусанут'
   }
