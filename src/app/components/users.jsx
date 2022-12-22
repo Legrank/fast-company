@@ -8,6 +8,10 @@ const Users = () => {
     const newUsers = users.filter((user) => user._id !== userId)
     setUsers(newUsers)
   }
+  if (users.length === 0)
+    return (
+      <span className="badge bg-danger fs-4">Сегодня тусы не будет :(</span>
+    )
   const renderPhrase = (countUser) => {
     const lastNumber = countUser % 10
     const numbers = [2, 3, 4]
@@ -20,10 +24,7 @@ const Users = () => {
   const usersRows = users.map((user) => (
     <User user={user} key={user._id} handleDelete={handleDelete}></User>
   ))
-  if (users.length === 0)
-    return (
-      <span className="badge bg-danger fs-4">Сегодня тусы не будет :(</span>
-    )
+
   return (
     <>
       <span className="badge bg-primary fs-4">
