@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import api from '../api'
 import User from './user'
+import { SearchStatus } from './searchStatus'
 
 const Users = () => {
   const [users, setUsers] = useState(api.users.fetchAll())
@@ -8,30 +9,26 @@ const Users = () => {
     const newUsers = users.filter((user) => user._id !== userId)
     setUsers(newUsers)
   }
-  if (users.length === 0)
-    return (
-      <span className="badge bg-danger fs-4">Сегодня тусы не будет :(</span>
-    )
-  const renderPhrase = (countUser) => {
-    const lastNumber = countUser % 10
-    const lastTwoNumber = countUser % 100
-    const numbers = [2, 3, 4]
-    const ignoreNumbers = [12, 13, 14]
-    return ignoreNumbers.includes(lastTwoNumber) ||
-      !numbers.includes(lastNumber)
-      ? 'человек тусанёт'
-      : 'человека тусанут'
+  const toogleBookmark = (userId) => {
+    const newUsers = users.map((user) => {
+      if (user._id === userId) user.bookmark = !user.bookmark
+      return user
+    })
+    setUsers(newUsers)
   }
 
   const usersRows = users.map((user) => (
-    <User user={user} key={user._id} handleDelete={handleDelete}></User>
+    <User
+      user={user}
+      key={user._id}
+      onDelete={handleDelete}
+      toogleBookmark={toogleBookmark}
+    ></User>
   ))
 
   return (
     <>
-      <span className="badge bg-primary fs-4">
-        {users.length} {renderPhrase(users.length)} с тобой сегодня
-      </span>
+      <SearchStatus countUser={users.length}></SearchStatus>
       <table className="table">
         <thead>
           <tr>
@@ -40,6 +37,7 @@ const Users = () => {
             <th scope="col">Профессия</th>
             <th scope="col">Встретился раз</th>
             <th scope="col">Оценка</th>
+            <th scope="col">Избраное</th>
             <th scope="col"></th>
           </tr>
         </thead>
