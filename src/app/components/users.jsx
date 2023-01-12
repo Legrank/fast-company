@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import api from '../api'
 import User from './user'
 import { SearchStatus } from './searchStatus'

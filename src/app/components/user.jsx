@@ -1,6 +1,7 @@
-import React from 'react'
+// import React from 'react'
 import Qualitie from './qualitie'
 import Bookmark from './bookmark'
+import PropTypes from 'prop-types'
 
 const User = ({ user, onDelete, toogleBookmark }) => {
   const qualities = user.qualities.map((qualitie) => (
@@ -31,6 +32,12 @@ const User = ({ user, onDelete, toogleBookmark }) => {
       </td>
     </tr>
   )
+}
+
+User.propTypes = {
+  user: PropTypes.object.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  toogleBookmark: PropTypes.func.isRequired,
 }
 
 export default User
