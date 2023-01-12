@@ -3,7 +3,7 @@ import Qualitie from './qualitie'
 import Bookmark from './bookmark'
 import PropTypes from 'prop-types'
 
-const User = ({ user, onDelete, toogleBookmark }) => {
+const User = ({ user, onDelete, onToggleBookMark }) => {
   const qualities = user.qualities.map((qualitie) => (
     <Qualitie key={qualitie._id} qualitie={qualitie}></Qualitie>
   ))
@@ -18,7 +18,7 @@ const User = ({ user, onDelete, toogleBookmark }) => {
         <Bookmark
           bookmark={user.bookmark}
           userId={user._id}
-          toogleBookmark={toogleBookmark}
+          onToggleBookMark={onToggleBookMark}
         ></Bookmark>
       </td>
       <td>
@@ -37,7 +37,7 @@ const User = ({ user, onDelete, toogleBookmark }) => {
 User.propTypes = {
   user: PropTypes.object.isRequired,
   onDelete: PropTypes.func.isRequired,
-  toogleBookmark: PropTypes.func.isRequired,
+  onToggleBookMark: PropTypes.func.isRequired,
 }
 
 export default User

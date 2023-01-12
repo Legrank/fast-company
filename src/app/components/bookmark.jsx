@@ -1,7 +1,7 @@
 // import React from 'react'
 import PropTypes from 'prop-types'
 
-function Bookmark({ bookmark, userId, toogleBookmark }) {
+function Bookmark({ bookmark, userId, onToggleBookMark }) {
   const icon = bookmark ? (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -32,7 +32,7 @@ function Bookmark({ bookmark, userId, toogleBookmark }) {
     <button
       type="button"
       className="btn btn-outline-dark"
-      onClick={() => toogleBookmark(userId)}
+      onClick={() => onToggleBookMark(userId)}
     >
       {icon}
     </button>
@@ -42,7 +42,7 @@ function Bookmark({ bookmark, userId, toogleBookmark }) {
 Bookmark.propTypes = {
   bookmark: PropTypes.bool.isRequired,
   userId: PropTypes.string.isRequired,
-  toogleBookmark: PropTypes.func.isRequired,
+  onToggleBookMark: PropTypes.func.isRequired,
 }
 
 export default Bookmark
