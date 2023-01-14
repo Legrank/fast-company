@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 function Bookmark({ bookmark, userId, onToggleBookMark }) {
+    /* eslint-disable multiline-ternary */
     const icon = bookmark ? (
         <svg
             xmlns="http://www.w3.org/2000/svg"

@@ -34,7 +34,7 @@ module.exports = {
                 asyncArrow: 'never',
             },
         ],
-        'multiline-ternary': ['error', 'never'],
+        'multiline-ternary': ['error', 'always-multiline'],
         quotes: [
             'error',
             'single',
