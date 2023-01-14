@@ -42,6 +42,7 @@ const Users = () => {
         api.professions.fetchAll().then((data) => setProfessions(data))
     }, [])
     useEffect(() => setCurrentPage(1), [selectedProf])
+    /* eslint-disable */
     const filteredUsers = selectedProf
         ? users.filter(
               (profession) => profession.profession._id === selectedProf._id
