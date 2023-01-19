@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
+import { orderBy } from 'lodash'
 
 import api from '../api'
 import { paginate } from '../utils/paginate'
-
 import { SearchStatus } from './searchStatus'
-import User from './user'
 import Pagination from './pagination'
 import GroupList from './groupList'
+import UsersTable from './usersTable'
 
 const Users = () => {
     const PAGE_SIZE = 4
@@ -28,6 +28,9 @@ const Users = () => {
     const handleProfessionSelect = (profession) => {
         setSelectedProf(profession)
     }
+    const handleSort = (item) => {
+        setSortBy(item)
+    }
     const clearFilter = () => {
         setSelectedProf()
     }
@@ -36,9 +39,14 @@ const Users = () => {
     const [professions, setProfessions] = useState()
     const [selectedProf, setSelectedProf] = useState()
     const [currentPage, setCurrentPage] = useState(1)
+    const [sortBy, setSortBy] = useState({ path: 'name', reverse: false })
+    const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
-        api.users.fetchAll().then((data) => setUsers(data))
+        api.users.fetchAll().then((data) => {
+            setUsers(data)
+            setIsLoading(false)
+        })
         api.professions.fetchAll().then((data) => setProfessions(data))
     }, [])
     useEffect(() => setCurrentPage(1), [selectedProf])
@@ -48,17 +56,15 @@ const Users = () => {
               (profession) => profession.profession._id === selectedProf._id
           )
         : users
-    const userCrop = paginate(filteredUsers, currentPage, PAGE_SIZE)
+    const sortedUser = orderBy(
+        filteredUsers,
+        [sortBy.path],
+        [sortBy.reverse ? 'desc' : 'asc']
+    )
+    const userCrop = paginate(sortedUser, currentPage, PAGE_SIZE)
     const itemCount = filteredUsers.length
-    const usersRows = userCrop.map((user) => (
-        <User
-            user={user}
-            key={user._id}
-            onDelete={handleDelete}
-            onToggleBookMark={handleTogleBookmark}
-        ></User>
-    ))
 
+    if (isLoading) return 'Loading...'
     return (
         <div className="d-flex">
             {professions && (
@@ -80,20 +86,13 @@ const Users = () => {
             <div className="flex-grow-1">
                 <SearchStatus countUser={itemCount}></SearchStatus>
                 {itemCount > 0 && (
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">Имя</th>
-                                <th scope="col">Качества</th>
-                                <th scope="col">Профессия</th>
-                                <th scope="col">Встретился раз</th>
-                                <th scope="col">Оценка</th>
-                                <th scope="col">Избраное</th>
-                                <th scope="col"></th>
-                            </tr>
-                        </thead>
-                        <tbody>{usersRows}</tbody>
-                    </table>
+                    <UsersTable
+                        users={userCrop}
+                        onDelete={handleDelete}
+                        onToggleBookMark={handleTogleBookmark}
+                        onSort={handleSort}
+                        selectedSort={sortBy}
+                    ></UsersTable>
                 )}
                 <div className="d-flex justify-content-center">
                     <Pagination
