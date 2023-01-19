@@ -1,9 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import Arrow from './arrow'
+
 function TableHead({ onSort, selectedSort, columns }) {
+    const isActive = (item) => selectedSort.path === item
     const handleSort = (item) => {
-        if (selectedSort.path === item) {
+        if (isActive(item)) {
             onSort({
                 ...selectedSort,
                 reverse: !selectedSort.reverse,
@@ -23,6 +26,9 @@ function TableHead({ onSort, selectedSort, columns }) {
                         {...{ role: path && 'button' }}
                     >
                         {name}
+                        {isActive(path) && (
+                            <Arrow position={selectedSort.reverse}></Arrow>
+                        )}
                     </th>
                 ))}
             </tr>
