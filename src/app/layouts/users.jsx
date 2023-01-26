@@ -3,10 +3,10 @@ import { orderBy } from 'lodash'
 
 import api from '../api'
 import { paginate } from '../utils/paginate'
-import { SearchStatus } from './searchStatus'
-import Pagination from './pagination'
-import GroupList from './groupList'
-import UsersTable from './usersTable'
+import { SearchStatus } from '../components/searchStatus'
+import Pagination from '../components/pagination'
+import GroupList from '../components/groupList'
+import UsersTable from '../components/usersTable'
 
 const Users = () => {
     const PAGE_SIZE = 4

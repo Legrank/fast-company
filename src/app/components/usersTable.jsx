@@ -6,6 +6,7 @@ import TableHead from './tableHead'
 import TableBody from './tableBody'
 import Bookmark from './bookmark'
 import QualitiesList from './qualitiesList'
+import { Link } from 'react-router-dom'
 
 function UsersTable({
     users,
@@ -15,7 +16,13 @@ function UsersTable({
     onDelete,
 }) {
     const columns = {
-        name: { path: 'name', name: 'Имя' },
+        name: {
+            path: 'name',
+            name: 'Имя',
+            component: (user) => (
+                <Link to={`/user/${user._id}`}>{user.name}</Link>
+            ),
+        },
         qualities: {
             name: 'Качества',
             component: (user) => (
