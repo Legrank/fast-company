@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import Arrow from './arrow'
+import Arrow from '../arrow'
 
 function TableHead({ onSort, selectedSort, columns }) {
     const isActive = (item) => selectedSort.path === item

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, Switch, Redirect } from 'react-router-dom'
 
-import NavBar from './app/components/navBar'
+import NavBar from './app/components/ui/navBar'
 import Users from './app/layouts/users'
 import Login from './app/layouts/login'
 import Main from './app/layouts/main'

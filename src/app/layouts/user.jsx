@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 
 import api from '../api'
-import QualitiesList from '../components/qualitiesList'
+import QualitiesList from '../components/ui/qualities'
 
 export default function User() {
     const history = useHistory()

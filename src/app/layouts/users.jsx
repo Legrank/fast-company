@@ -3,11 +3,11 @@ import { orderBy } from 'lodash'
 
 import api from '../api'
 import { paginate } from '../utils/paginate'
-import { SearchStatus } from '../components/searchStatus'
-import Pagination from '../components/pagination'
-import GroupList from '../components/groupList'
-import UsersTable from '../components/usersTable'
-import Search from '../components/search'
+import { SearchStatus } from '../components/ui/searchStatus'
+import Pagination from '../components/common/pagination'
+import GroupList from '../components/common/groupList'
+import UsersTable from '../components/ui/usersTable'
+import Search from '../components/common/form/search'
 
 const Users = () => {
     const PAGE_SIZE = 4
