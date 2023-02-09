@@ -32,9 +32,8 @@ function TextField({ value, label, name, type = 'text', error, onChange }) {
                         ></i>
                     </button>
                 )}
+                {error && <div className="invalid-feedback">{error}</div>}
             </div>
-
-            {error && <div className="invalid-feedback">{error}</div>}
         </div>
     )
 }
