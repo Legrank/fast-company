@@ -18,14 +18,14 @@ export const SearchStatus = ({ countUser }) => {
     }
     if (countUser === 0) {
         return (
-            <span className="badge bg-danger fs-4">
+            <span className="badge bg-danger fs-4 mb-2">
                 Сегодня тусы не будет :(
             </span>
         )
     }
 
     return (
-        <span className="badge bg-primary fs-4">
+        <span className="badge bg-primary fs-4 mb-2">
             {countUser} {renderPhrase(countUser)} с тобой сегодня
         </span>
     )

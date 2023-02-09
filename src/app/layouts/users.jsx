@@ -7,6 +7,7 @@ import { SearchStatus } from '../components/searchStatus'
 import Pagination from '../components/pagination'
 import GroupList from '../components/groupList'
 import UsersTable from '../components/usersTable'
+import Search from '../components/search'
 
 const Users = () => {
     const PAGE_SIZE = 4
@@ -34,6 +35,9 @@ const Users = () => {
     const clearFilter = () => {
         setSelectedProf()
     }
+    const handleSearchInput = (e) => {
+        setSearchText(e.target.value)
+    }
 
     const [users, setUsers] = useState([])
     const [professions, setProfessions] = useState()
@@ -41,6 +45,7 @@ const Users = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [sortBy, setSortBy] = useState({ path: 'name', reverse: false })
     const [isLoading, setIsLoading] = useState(true)
+    const [searchText, setSearchText] = useState('')
 
     useEffect(() => {
         api.users.fetchAll().then((data) => {
@@ -49,20 +54,38 @@ const Users = () => {
         })
         api.professions.fetchAll().then((data) => setProfessions(data))
     }, [])
-    useEffect(() => setCurrentPage(1), [selectedProf])
+    useEffect(() => {
+        if (selectedProf) setSearchText('')
+        setCurrentPage(1)
+    }, [selectedProf])
+    useEffect(() => {
+        if (searchText) setSelectedProf()
+        setCurrentPage(1)
+    }, [searchText])
     /* eslint-disable */
-    const filteredUsers = selectedProf
-        ? users.filter(
-              (profession) => profession.profession._id === selectedProf._id
-          )
-        : users
+    const filteredUsers = () => {
+        if (selectedProf) {
+            return users.filter(
+                (profession) => profession.profession._id === selectedProf._id
+            )
+        }
+        if (searchText) {
+            return users.filter((user) => {
+                const regex = new RegExp(searchText.toLowerCase(), 'g')
+                return regex.test(user.name.toLowerCase())
+            })
+        }
+        return users
+    }
+
     const sortedUser = orderBy(
-        filteredUsers,
+        filteredUsers(),
         [sortBy.path],
         [sortBy.reverse ? 'desc' : 'asc']
     )
+
     const userCrop = paginate(sortedUser, currentPage, PAGE_SIZE)
-    const itemCount = filteredUsers.length
+    const itemCount = filteredUsers().length
 
     if (isLoading) return 'Loading...'
     return (
@@ -85,6 +108,10 @@ const Users = () => {
             )}
             <div className="flex-grow-1">
                 <SearchStatus countUser={itemCount}></SearchStatus>
+                <Search
+                    value={searchText}
+                    onChange={handleSearchInput}
+                ></Search>
                 {itemCount > 0 && (
                     <UsersTable
                         users={userCrop}
