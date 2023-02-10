@@ -2,10 +2,22 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import TextField from '../common/form/textField'
 import { validator } from '../../utils/validator'
+import SelectField from '../common/form/selectField'
+import api from '../../api'
+import RadioField from '../common/form/radioField'
+import MultiSelectField from '../common/form/multiSelectField'
 
-const LoginForm = ({ toRegister }) => {
-    const [data, setData] = useState({ email: '', password: '' })
+const RegisterForm = ({ toLogin }) => {
+    const [data, setData] = useState({
+        email: '',
+        password: '',
+        profession: '',
+        sex: 'Male',
+        qualities: [],
+    })
     const [errors, setErrors] = useState({})
+    const [professions, setProfessions] = useState()
+    const [qualities, setQualities] = useState({})
     const handleChange = ({ target }) => {
         setData((prevState) => ({
             ...prevState,
@@ -36,7 +48,16 @@ const LoginForm = ({ toRegister }) => {
                 value: 8,
             },
         },
+        profession: {
+            isRequired: {
+                message: 'Выбирите свою профессию',
+            },
+        },
     }
+    useEffect(() => {
+        api.professions.fetchAll().then((data) => setProfessions(data))
+        api.qualities.fetchAll().then((data) => setQualities(data))
+    }, [])
     useEffect(() => {
         validate()
     }, [data])
@@ -55,7 +76,7 @@ const LoginForm = ({ toRegister }) => {
     }
     return (
         <>
-            <h3 className="mb-4">Login</h3>
+            <h3 className="mb-4">Регистрация</h3>
             <form onSubmit={handleSubmit}>
                 <TextField
                     label="Электронная почта"
@@ -72,6 +93,26 @@ const LoginForm = ({ toRegister }) => {
                     onChange={handleChange}
                     error={errors.password}
                 />
+                <SelectField
+                    options={professions}
+                    onChange={handleChange}
+                    label={'Выбирите свою профессию'}
+                    name={'profession'}
+                    value={data.profession}
+                    error={errors.profession}
+                />
+                <RadioField
+                    options={[
+                        { name: 'Male', value: 'Male' },
+                        { name: 'Female', value: 'Female' },
+                        { name: 'Other', value: 'Other' },
+                    ]}
+                    onChange={handleChange}
+                    label={'Укажите ваш пол'}
+                    name={'sex'}
+                    value={data.sex}
+                />
+                <MultiSelectField options={qualities} label="Ваши качества" />
                 <button
                     className="btn btn-primary w-100 mx-auto"
                     type="submit"
@@ -81,14 +122,14 @@ const LoginForm = ({ toRegister }) => {
                 </button>
             </form>
             <p>
-                Нет аккаунта? <a onClick={toRegister}>Зарегистрируйтесь.</a>
+                Уже есть аккаунт? <a onClick={toLogin}>Войдите</a>
             </p>
         </>
     )
 }
 
-LoginForm.propTypes = {
-    toRegister: PropTypes.func.isRequired,
+RegisterForm.propTypes = {
+    toLogin: PropTypes.func.isRequired,
 }
 
-export default LoginForm
+export default RegisterForm

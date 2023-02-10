@@ -14,7 +14,7 @@ function App() {
             <NavBar />
             <Switch>
                 <Route path="/" exact component={Main} />
-                <Route path="/login" component={Login} />
+                <Route path="/login/:type?" component={Login} />
                 <Route exact path="/users" component={Users} />
                 <Route path="/user/:id" component={User} />
                 <Route path="/404" component={NotFound} />
