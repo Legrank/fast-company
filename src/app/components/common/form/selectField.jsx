@@ -11,22 +11,22 @@ function SelectField({
     defaultOption = 'Выберите...',
 }) {
     const handleChange = ({ target }) => {
-        onChange(target)
+        onChange({ name: target.name, value: target.value })
     }
     if (!options) return null
     const optionsArray =
-        typeof option === 'object' && !Array.isArray(options)
+        typeof options === 'object' && !Array.isArray(options)
             ? Object.values(options)
             : options
 
     return (
         <div className="md-4">
-            <label htmlFor={name + 'select'} className="form-label">
+            <label htmlFor={name} className="form-label">
                 {label}
             </label>
             <select
                 className="form-select"
-                id={name + 'select'}
+                id={name}
                 onChange={handleChange}
                 value={value}
                 name={name}

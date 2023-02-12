@@ -15,12 +15,15 @@ export default function UserPage() {
     }, [])
 
     const handleGoAllUsers = () => {
-        history.replace('/users')
+        history.push('/users')
+    }
+    const handleEditUser = () => {
+        history.push(`/user/${id}/edit`)
     }
 
     if (!user) return <div>Загрузка...</div>
     return (
-        <div>
+        <div className="card w-75 mx-auto">
             <h1>{user.name}</h1>
             <h3>Профессия: {user.profession.name}</h3>
             <div>
@@ -28,13 +31,22 @@ export default function UserPage() {
             </div>
             <div>Встретился раз: {user.completedMeetings}</div>
             <h3>Оценка: {user.rate}</h3>
-            <button
-                type="button"
-                className="btn btn-primary"
-                onClick={handleGoAllUsers}
-            >
-                Все пользователи
-            </button>
+            <div>
+                <button
+                    type="button"
+                    className="btn btn-primary me-3"
+                    onClick={handleEditUser}
+                >
+                    Редактировать
+                </button>
+                <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={handleGoAllUsers}
+                >
+                    Все пользователи
+                </button>
+            </div>
         </div>
     )
 }

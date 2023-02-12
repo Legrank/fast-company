@@ -9,7 +9,7 @@ function Search({ value, onChange }) {
             placeholder="Поиск"
             onChange={onChange}
             value={value}
-        ></input>
+        />
     )
 }
 

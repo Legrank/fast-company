@@ -7,6 +7,7 @@ import Login from './app/layouts/login'
 import Main from './app/layouts/main'
 import NotFound from './app/layouts/notFound'
 import User from './app/layouts/user'
+import EditUser from './app/layouts/editUser'
 
 function App() {
     return (
@@ -16,7 +17,8 @@ function App() {
                 <Route path="/" exact component={Main} />
                 <Route path="/login/:type?" component={Login} />
                 <Route exact path="/users" component={Users} />
-                <Route path="/user/:id" component={User} />
+                <Route exact path="/user/:id" component={User} />
+                <Route exact path="/user/:id/edit" component={EditUser} />
                 <Route path="/404" component={NotFound} />
                 <Redirect to="/404" />
             </Switch>

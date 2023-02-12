@@ -2,6 +2,9 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
 function TextField({ value, label, name, type = 'text', error, onChange }) {
+    const handleChange = ({ target }) => {
+        onChange({ name: target.name, value: target.value })
+    }
     const toggleShowPassword = () => setShowPassword((prev) => !prev)
     const [showPassword, setShowPassword] = useState(false)
     const getInputClasses = () => 'form-control' + (error ? ' is-invalid' : '')
@@ -17,8 +20,8 @@ function TextField({ value, label, name, type = 'text', error, onChange }) {
                     id={name}
                     name={name}
                     value={value}
-                    onChange={onChange}
-                ></input>
+                    onChange={handleChange}
+                />
                 {type === 'password' && (
                     <button
                         className="btn btn-outline-secondary"
