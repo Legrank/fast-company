@@ -27,11 +27,7 @@ function MultiSelectField({ label, onChange, options, name, defaultValue }) {
     if (!options) return null
     const optionsArray =
         typeof options === 'object' && !Array.isArray(options)
-            ? Object.values(options).map((option) => ({
-                  value: option._id,
-                  label: option.name,
-                  color: option.color,
-              }))
+            ? Object.values(options)
             : options
     return (
         <div className="mb-4">

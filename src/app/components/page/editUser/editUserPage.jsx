@@ -5,7 +5,9 @@ import TextField from '../../common/form/textField'
 import MultiSelectField from '../../common/form/multiSelectField'
 import SelectField from '../../common/form/selectField'
 import RadioField from '../../common/form/radioField'
-import { User, UserDTO } from '../../../utils/user'
+import { normalizeProfession } from '../../../utils/professions'
+import { normalizeQualities } from '../../../utils/qualities'
+import { normalizeUser, getUser } from '../../../utils/user'
 
 export default function EditUserPage() {
     const handleChange = (data) => {
@@ -15,7 +17,7 @@ export default function EditUserPage() {
         }))
     }
     const handleUpdateUser = () => {
-        api.users.update(id, new UserDTO(user, professions))
+        api.users.update(id, getUser(user, qualities, professions))
         history.push(`/user/${id}`)
     }
     const [user, setUser] = useState()
@@ -25,9 +27,13 @@ export default function EditUserPage() {
     const { id } = useParams()
     const history = useHistory()
     useEffect(() => {
-        api.users.getById(id).then((data) => setUser(new User(data)))
-        api.professions.fetchAll().then((data) => setProfessions(data))
-        api.qualities.fetchAll().then((data) => setQualities(data))
+        api.users.getById(id).then((data) => setUser(normalizeUser(data)))
+        api.professions
+            .fetchAll()
+            .then((data) => setProfessions(normalizeProfession(data)))
+        api.qualities
+            .fetchAll()
+            .then((data) => setQualities(normalizeQualities(data)))
     }, [])
     if (!user) return 'Загрузка'
     return (
