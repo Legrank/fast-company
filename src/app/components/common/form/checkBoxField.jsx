@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-function CheckBoxField({ name, value, onChange, children, error }) {
+function CheckBoxField({ name, value, onChange, children, error, ...rest }) {
     const handleChange = () => {
         onChange({ name, value: !value })
     }
@@ -15,6 +15,7 @@ function CheckBoxField({ name, value, onChange, children, error }) {
                 value=""
                 id={name}
                 onChange={handleChange}
+                {...rest}
             />
             <label className="form-check-label" htmlFor={name}>
                 {children}
@@ -26,8 +27,8 @@ function CheckBoxField({ name, value, onChange, children, error }) {
 
 CheckBoxField.propTypes = {
     name: PropTypes.string.isRequired,
-    value: PropTypes.bool.isRequired,
-    onChange: PropTypes.func.isRequired,
+    value: PropTypes.bool,
+    onChange: PropTypes.func,
     children: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.node),
         PropTypes.node,
@@ -35,4 +36,4 @@ CheckBoxField.propTypes = {
     error: PropTypes.string,
 }
 
-export default CheckBoxField
+export default React.memo(CheckBoxField)

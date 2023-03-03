@@ -1,18 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import TextField from '../common/form/textField'
 import { validator } from '../../utils/validator'
-import CheckBoxField from '../common/form/checkBoxField'
+import FormComponent, { CheckBoxField, TextField } from '../common/form'
 
 const LoginForm = ({ toRegister }) => {
-    const [data, setData] = useState({ email: '', password: '', stayOn: false })
+    const [data] = useState({ email: '', password: '', stayOn: false })
     const [errors, setErrors] = useState({})
-    const handleChange = (data) => {
-        setData((prevState) => ({
-            ...prevState,
-            [data.name]: data.value,
-        }))
-    }
     const validatorConfig = {
         email: {
             isRequired: {
@@ -48,38 +41,19 @@ const LoginForm = ({ toRegister }) => {
     }
     const isValid = Object.keys(errors).length === 0
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        const isValid = validate()
-        if (!isValid) return
+    const handleSubmit = (data) => {
         console.log(data)
     }
     return (
         <>
             <h3 className="mb-4">Login</h3>
-            <form onSubmit={handleSubmit}>
-                <TextField
-                    label="Электронная почта"
-                    name="email"
-                    value={data.email}
-                    onChange={handleChange}
-                    error={errors.email}
-                />
-                <TextField
-                    label="Пароль"
-                    type="password"
-                    name="password"
-                    value={data.password}
-                    onChange={handleChange}
-                    error={errors.password}
-                />
-                <CheckBoxField
-                    value={data.stayOn}
-                    name="stayOn"
-                    onChange={handleChange}
-                >
-                    Оставаться в сети
-                </CheckBoxField>
+            <FormComponent
+                validatorConfig={validatorConfig}
+                onSubmit={handleSubmit}
+            >
+                <TextField label="Электронная почта" name="email" />
+                <TextField label="Пароль" type="password" name="password" />
+                <CheckBoxField name="stayOn">Оставаться в сети</CheckBoxField>
                 <button
                     className="btn btn-primary w-100 mx-auto"
                     type="submit"
@@ -87,7 +61,7 @@ const LoginForm = ({ toRegister }) => {
                 >
                     Submit
                 </button>
-            </form>
+            </FormComponent>
             <p>
                 Нет аккаунта? <a onClick={toRegister}>Зарегистрируйтесь.</a>
             </p>

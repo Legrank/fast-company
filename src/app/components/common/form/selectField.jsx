@@ -9,6 +9,7 @@ function SelectField({
     options,
     name,
     defaultOption = 'Выберите...',
+    ...rest
 }) {
     const handleChange = ({ target }) => {
         onChange({ name: target.name, value: target.value })
@@ -30,6 +31,7 @@ function SelectField({
                 onChange={handleChange}
                 value={value}
                 name={name}
+                {...rest}
             >
                 <option disabled value="">
                     {defaultOption}
@@ -46,13 +48,13 @@ function SelectField({
 }
 
 SelectField.propTypes = {
-    value: PropTypes.string.isRequired,
+    value: PropTypes.string,
     label: PropTypes.string.isRequired,
     error: PropTypes.string,
-    onChange: PropTypes.func.isRequired,
+    onChange: PropTypes.func,
     options: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
     defaultOption: PropTypes.string,
     name: PropTypes.string.isRequired,
 }
 
-export default SelectField
+export default React.memo(SelectField)

@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-function RadioField({ value, label, onChange, options, name }) {
+function RadioField({ value, label, onChange, options, name, ...rest }) {
     const handleChange = ({ target }) => {
         onChange({ name: target.name, value: target.value })
     }
@@ -21,6 +21,7 @@ function RadioField({ value, label, onChange, options, name }) {
                         onChange={handleChange}
                         name={name}
                         checked={option.value === value}
+                        {...rest}
                     />
                     <label
                         className="form-check-label"
@@ -35,11 +36,11 @@ function RadioField({ value, label, onChange, options, name }) {
 }
 
 RadioField.propTypes = {
-    value: PropTypes.string.isRequired,
+    value: PropTypes.string,
     label: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
+    onChange: PropTypes.func,
     options: PropTypes.array.isRequired,
     name: PropTypes.string.isRequired,
 }
 
-export default RadioField
+export default React.memo(RadioField)
