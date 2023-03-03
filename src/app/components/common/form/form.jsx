@@ -40,7 +40,7 @@ function FormComponent({ children, validatorConfig, onSubmit, defaultData }) {
             return React.cloneElement(child, {
                 onChange: handleChange,
                 onKeyDown: handleKeyDown,
-                value: data[child.props.name] || '',
+                value: data[child.props.name],
                 error: errors[child.props.name],
             })
         }

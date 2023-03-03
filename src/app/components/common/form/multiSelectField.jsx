@@ -7,14 +7,7 @@ import chroma from 'chroma-js'
 
 const animatedComponents = makeAnimated()
 
-function MultiSelectField({
-    label,
-    onChange,
-    options,
-    name,
-    defaultValue,
-    ...rest
-}) {
+function MultiSelectField({ label, onChange, options, name, defaultValue }) {
     const getColor = (color) => {
         const colors = {
             primary: '#0d6efd',
@@ -107,14 +100,12 @@ function MultiSelectField({
                         },
                     }),
                 }}
-                {...rest}
             />
         </div>
     )
 }
 
 MultiSelectField.propTypes = {
-    value: PropTypes.string,
     label: PropTypes.string.isRequired,
     onChange: PropTypes.func,
     options: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),

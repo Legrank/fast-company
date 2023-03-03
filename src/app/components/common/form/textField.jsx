@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
 function TextField({
-    value,
+    value = '',
     label,
     name,
     type = 'text',

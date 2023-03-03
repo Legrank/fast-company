@@ -1,7 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-function CheckBoxField({ name, value, onChange, children, error, ...rest }) {
+function CheckBoxField({
+    name,
+    value = false,
+    onChange,
+    children,
+    error,
+    ...rest
+}) {
     const handleChange = () => {
         onChange({ name, value: !value })
     }
@@ -12,7 +19,7 @@ function CheckBoxField({ name, value, onChange, children, error, ...rest }) {
             <input
                 className={getInputClasses()}
                 type="checkbox"
-                value=""
+                value={value}
                 id={name}
                 onChange={handleChange}
                 {...rest}
