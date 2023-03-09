@@ -4,6 +4,7 @@ import MultiSelectField from './multiSelectField'
 import CheckBoxField from './checkBoxField'
 import RadioField from './radioField'
 import Search from './search'
+import TextareaField from './textareaField'
 
 export {
     TextField,
@@ -12,4 +13,5 @@ export {
     RadioField,
     CheckBoxField,
     Search,
+    TextareaField,
 }

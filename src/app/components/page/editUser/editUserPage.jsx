@@ -16,6 +16,9 @@ export default function EditUserPage() {
         api.users.update(id, getUser(data, qualities, professions))
         history.push(`/user/${id}`)
     }
+    const handleBack = () => {
+        history.push(`/user/${id}`)
+    }
     const [user, setUser] = useState()
     const [professions, setProfessions] = useState()
     const [qualities, setQualities] = useState({})
@@ -32,11 +35,19 @@ export default function EditUserPage() {
     }, [])
     if (!user) return 'Загрузка'
     return (
-        <div className="w-75 mx-auto">
+        <div className="w-75 mx-auto d-flex">
+            <button
+                type="button"
+                className="btn btn-primary align-self-start me-2"
+                onClick={handleBack}
+            >
+                Назад
+            </button>
             <FormComponent
                 onSubmit={handleUpdateUser}
                 defaultData={user}
                 validatorConfig={{}}
+                className="flex-grow-1"
             >
                 <TextField label="Имя" name="name" autoFocus />
                 <TextField label="email" name="email" />

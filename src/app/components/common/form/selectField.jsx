@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 function SelectField({
-    value,
+    value = 'default',
     label,
     error,
     onChange,
@@ -33,7 +33,7 @@ function SelectField({
                 name={name}
                 {...rest}
             >
-                <option disabled value="">
+                <option disabled value="default">
                     {defaultOption}
                 </option>
                 {optionsArray.map((option) => (

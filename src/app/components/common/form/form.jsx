@@ -3,7 +3,14 @@ import PropTypes from 'prop-types'
 
 import { validator } from '../../../utils/validator'
 
-function FormComponent({ children, validatorConfig, onSubmit, defaultData }) {
+function FormComponent({
+    children,
+    validatorConfig,
+    onSubmit,
+    defaultData,
+    resetForm,
+    ...rest
+}) {
     const handleChange = useCallback((data) => {
         setData((prevState) => ({
             ...prevState,
@@ -13,13 +20,8 @@ function FormComponent({ children, validatorConfig, onSubmit, defaultData }) {
     const handleSubmit = (e) => {
         e.preventDefault()
         onSubmit(data)
-    }
-    const handleKeyDown = (e) => {
-        if (e.keyCode === 13) {
-            e.preventDefault()
-            const form = e.target.form
-            const indexField = Array.prototype.indexOf.call(form, e.target)
-            form.elements[indexField + 1].focus()
+        if (resetForm) {
+            setData(defaultData || {})
         }
     }
     const validate = () => {
@@ -39,7 +41,6 @@ function FormComponent({ children, validatorConfig, onSubmit, defaultData }) {
             }
             return React.cloneElement(child, {
                 onChange: handleChange,
-                onKeyDown: handleKeyDown,
                 value: data[child.props.name],
                 error: errors[child.props.name],
             })
@@ -60,7 +61,11 @@ function FormComponent({ children, validatorConfig, onSubmit, defaultData }) {
     useEffect(() => {
         validate()
     }, [data])
-    return <form onSubmit={handleSubmit}>{cloneElements}</form>
+    return (
+        <form onSubmit={handleSubmit} {...rest}>
+            {cloneElements}
+        </form>
+    )
 }
 
 FormComponent.propTypes = {
@@ -71,6 +76,7 @@ FormComponent.propTypes = {
     validatorConfig: PropTypes.object.isRequired,
     onSubmit: PropTypes.func.isRequired,
     defaultData: PropTypes.object,
+    resetForm: PropTypes.bool,
 }
 
 export default FormComponent
