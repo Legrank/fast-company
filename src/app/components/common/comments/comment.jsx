@@ -24,13 +24,13 @@ function dateFormat(date) {
     }
     const createYear = createDate.getFullYear()
     const createMonth = createDate.getMonth()
-    const createDay = createDate.getDay()
+    const createDay = createDate.getDate()
     const newYear = newDate.getFullYear()
     if (createYear < newYear) {
         return `${createDay} ${createMonth + 1} ${createYear}`
     }
     const newMonth = newDate.getMonth()
-    const newDay = newDate.getDay()
+    const newDay = newDate.getDate()
     if (createMonth < newMonth || createDay < newDay) {
         return `${createDay} ${createDate.toLocaleDateString('default', {
             month: 'long',
