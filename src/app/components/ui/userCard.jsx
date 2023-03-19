@@ -4,7 +4,7 @@ import { useParams, useHistory } from 'react-router-dom'
 
 function UserCard({ user }) {
     const handleEditUser = () => {
-        history.push(`/user/${id}/edit`)
+        history.push(`/users/${id}/edit`)
     }
     const history = useHistory()
     const { id } = useParams()

@@ -1,27 +1,30 @@
 import React, { useState, useEffect } from 'react'
 import { orderBy } from 'lodash'
 
-import api from '../../../api'
 import { paginate } from '../../../utils/paginate'
 import { SearchStatus } from '../../ui/searchStatus'
 import Pagination from '../../common/pagination'
 import GroupList from '../../common/groupList'
 import UsersTable from '../../ui/usersTable'
 import Search from '../../common/form/search'
+import { useUser } from '../../../hooks/useUsers'
+import { useProfession } from '../../../hooks/useProfession'
 
 const UsersPage = () => {
     const PAGE_SIZE = 4
 
     const handleDelete = (userId) => {
-        const newUsers = users.filter((user) => user._id !== userId)
-        setUsers(newUsers)
+        // const newUsers = users.filter((user) => user._id !== userId)
+        // setUsers(newUsers)
+        console.log(userId)
     }
     const handleTogleBookmark = (userId) => {
         const newUsers = users.map((user) => {
             if (user._id === userId) user.bookmark = !user.bookmark
             return user
         })
-        setUsers(newUsers)
+        // setUsers(newUsers)
+        console.log(newUsers)
     }
     const handlePageChange = (page) => {
         setCurrentPage(page)
@@ -39,21 +42,13 @@ const UsersPage = () => {
         setSearchText(e.target.value)
     }
 
-    const [users, setUsers] = useState([])
-    const [professions, setProfessions] = useState()
+    const { users, isLoading } = useUser()
+    const { isLoading: isProfessionLoading, professions } = useProfession()
     const [selectedProf, setSelectedProf] = useState()
     const [currentPage, setCurrentPage] = useState(1)
     const [sortBy, setSortBy] = useState({ path: 'name', reverse: false })
-    const [isLoading, setIsLoading] = useState(true)
     const [searchText, setSearchText] = useState('')
 
-    useEffect(() => {
-        api.users.fetchAll().then((data) => {
-            setUsers(data)
-            setIsLoading(false)
-        })
-        api.professions.fetchAll().then((data) => setProfessions(data))
-    }, [])
     useEffect(() => {
         if (selectedProf) setSearchText('')
         setCurrentPage(1)
@@ -66,7 +61,7 @@ const UsersPage = () => {
     const filteredUsers = () => {
         if (selectedProf) {
             return users.filter(
-                (profession) => profession.profession._id === selectedProf._id
+                (profession) => profession.profession === selectedProf._id
             )
         }
         if (searchText) {
@@ -90,7 +85,7 @@ const UsersPage = () => {
     if (isLoading) return 'Loading...'
     return (
         <div className="d-flex">
-            {professions && (
+            {!isProfessionLoading && (
                 <div className="p-2 d-flex flex-column">
                     <GroupList
                         items={professions}

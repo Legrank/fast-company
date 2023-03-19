@@ -26,14 +26,6 @@ module.exports = {
                 functions: 'never',
             },
         ],
-        'space-before-function-paren': [
-            'error',
-            {
-                anonymous: 'always',
-                named: 'never',
-                asyncArrow: 'never',
-            },
-        ],
         quotes: [
             'error',
             'single',

@@ -14,10 +14,10 @@ import { normalizeUser, getUser } from '../../../utils/user'
 export default function EditUserPage() {
     const handleUpdateUser = (data) => {
         api.users.update(id, getUser(data, qualities, professions))
-        history.push(`/user/${id}`)
+        history.push(`/users/${id}`)
     }
     const handleBack = () => {
-        history.push(`/user/${id}`)
+        history.push(`/users/${id}`)
     }
     const [user, setUser] = useState()
     const [professions, setProfessions] = useState()

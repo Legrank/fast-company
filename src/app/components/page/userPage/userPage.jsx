@@ -13,6 +13,7 @@ export default function UserPage() {
 
     useEffect(() => {
         api.users.getById(id).then((data) => {
+            console.log(id)
             setUser(data)
         })
     }, [])
