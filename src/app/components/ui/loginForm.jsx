@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 import { validator } from '../../utils/validator'
 import FormComponent, { CheckBoxField, TextField } from '../common/form'
+import { useAuth } from '../../hooks/useAuth'
 
 const LoginForm = ({ toRegister }) => {
+    const history = useHistory()
     const [data] = useState({ email: '', password: '', stayOn: false })
-    const [errors, setErrors] = useState({})
+    const [newError, setNewError] = useState({})
+    const { signIn } = useAuth()
     const validatorConfig = {
         email: {
             isRequired: {
@@ -36,13 +40,17 @@ const LoginForm = ({ toRegister }) => {
     }, [data])
     const validate = () => {
         const errors = validator(data, validatorConfig)
-        setErrors(errors)
         return Object.keys(errors).length === 0
     }
-    const isValid = Object.keys(errors).length === 0
 
-    const handleSubmit = (data) => {
-        console.log(data)
+    const handleSubmit = async (data) => {
+        setNewError({})
+        try {
+            await signIn(data)
+            history.push('/')
+        } catch (error) {
+            setNewError(error)
+        }
     }
     return (
         <>
@@ -50,15 +58,12 @@ const LoginForm = ({ toRegister }) => {
             <FormComponent
                 validatorConfig={validatorConfig}
                 onSubmit={handleSubmit}
+                newError={newError}
             >
                 <TextField label="Электронная почта" name="email" />
                 <TextField label="Пароль" type="password" name="password" />
                 <CheckBoxField name="stayOn">Оставаться в сети</CheckBoxField>
-                <button
-                    className="btn btn-primary w-100 mx-auto"
-                    type="submit"
-                    disabled={!isValid}
-                >
+                <button className="btn btn-primary w-100 mx-auto" type="submit">
                     Submit
                 </button>
             </FormComponent>

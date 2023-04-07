@@ -59,6 +59,7 @@ const RegisterForm = ({ toLogin }) => {
     }
 
     const handleSubmit = async (data) => {
+        setNewError({})
         const newData = {
             ...data,
             qualities: data.qualities.map((quality) => quality.value),

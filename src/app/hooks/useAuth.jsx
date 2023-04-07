@@ -7,6 +7,7 @@ import { setTokens } from '../services/localStorage.service'
 
 const httpAuth = axios.create()
 const AuthContext = React.createContext()
+const baseUrl = 'https://identitytoolkit.googleapis.com/v1/'
 
 export const useAuth = () => {
     return useContext(AuthContext)
@@ -17,8 +18,7 @@ const AuthProvider = ({ children }) => {
     const [error, setError] = useState(null)
 
     async function signUp({ email, password, ...rest }) {
-        const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyACH4VYvV3mQMhNrQGv2FmarlOep2VCJWM`
-
+        const url = `${baseUrl}accounts:signUp?key=${process.env.REACT_APP_FIREBASE_KEY}`
         try {
             const { data } = await httpAuth.post(url, {
                 email,
@@ -30,7 +30,6 @@ const AuthProvider = ({ children }) => {
         } catch (error) {
             errorCatcher(error)
             const { code, message } = error.response.data.error
-            console.log(code, message)
             if (code === 400) {
                 if (message === 'EMAIL_EXISTS') {
                     const errorObject = {
@@ -39,7 +38,38 @@ const AuthProvider = ({ children }) => {
                     throw errorObject
                 }
             }
-            // throw new Error
+        }
+    }
+    async function signIn({ email, password }) {
+        const url = `${baseUrl}accounts:signInWithPassword?key=${process.env.REACT_APP_FIREBASE_KEY}`
+        try {
+            const { data } = await httpAuth.post(url, {
+                email,
+                password,
+                returnSecureToken: true,
+            })
+            setTokens(data)
+        } catch (error) {
+            errorCatcher(error)
+            const { code, message } = error.response.data.error
+            if (code === 400) {
+                if (
+                    message === 'INVALID_PASSWORD' ||
+                    message === 'EMAIL_NOT_FOUND'
+                ) {
+                    const errorObject = {
+                        password: 'Неправильный логин или пароль',
+                    }
+                    throw errorObject
+                }
+                if (message === 'USER_DISABLED') {
+                    const errorObject = {
+                        password:
+                            'Профиль заблокирован. Обратитесь в поддержку.',
+                    }
+                    throw errorObject
+                }
+            }
         }
     }
     async function createUser(data) {
@@ -61,7 +91,7 @@ const AuthProvider = ({ children }) => {
         }
     }, [error])
     return (
-        <AuthContext.Provider value={{ signUp, currentUser }}>
+        <AuthContext.Provider value={{ signUp, signIn, currentUser }}>
             {children}
         </AuthContext.Provider>
     )
