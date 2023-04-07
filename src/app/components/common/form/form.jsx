@@ -9,6 +9,7 @@ function FormComponent({
     onSubmit,
     defaultData,
     resetForm,
+    newError,
     ...rest
 }) {
     const handleChange = useCallback((data) => {
@@ -61,6 +62,9 @@ function FormComponent({
     useEffect(() => {
         validate()
     }, [data])
+    useEffect(() => {
+        setErrors((prev) => ({ ...prev, ...newError }))
+    }, [newError])
     return (
         <form onSubmit={handleSubmit} {...rest}>
             {cloneElements}
@@ -77,6 +81,7 @@ FormComponent.propTypes = {
     onSubmit: PropTypes.func.isRequired,
     defaultData: PropTypes.object,
     resetForm: PropTypes.bool,
+    newError: PropTypes.object,
 }
 
 export default FormComponent

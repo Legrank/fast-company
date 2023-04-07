@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import api from '../../api'
-import { getProfessionById, normalizeProfession } from '../../utils/professions'
-import { getQualities, normalizeQualities } from '../../utils/qualities'
+import { normalizeProfession } from '../../utils/professions'
+import { normalizeQualities } from '../../utils/qualities'
 import FormComponent, {
     SelectField,
     RadioField,
@@ -10,21 +9,18 @@ import FormComponent, {
     CheckBoxField,
     TextField,
 } from '../common/form'
+import { useQuality } from '../../hooks/useQuality'
+import { useProfession } from '../../hooks/useProfession'
+import { useAuth } from '../../hooks/useAuth'
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 
 const RegisterForm = ({ toLogin }) => {
+    const history = useHistory()
     const [data] = useState({})
-    const [qualities, setQualities] = useState([])
-    const [professions, setProfession] = useState([])
-
-    useEffect(() => {
-        api.professions.fetchAll().then((data) => {
-            setProfession(normalizeProfession(data))
-        })
-        api.qualities.fetchAll().then((data) => {
-            setQualities(normalizeQualities(data))
-        })
-    }, [])
-
+    const { qualitys } = useQuality()
+    const { professions } = useProfession()
+    const { signUp } = useAuth()
+    const [newError, setNewError] = useState({})
     const validatorConfig = {
         email: {
             isRequired: {
@@ -62,13 +58,17 @@ const RegisterForm = ({ toLogin }) => {
         },
     }
 
-    const handleSubmit = (data) => {
-        const { profession: userProfession, qualities: userQualities } = data
-        console.log({
+    const handleSubmit = async (data) => {
+        const newData = {
             ...data,
-            profession: getProfessionById(userProfession, professions),
-            qualities: getQualities(userQualities, qualities),
-        })
+            qualities: data.qualities.map((quality) => quality.value),
+        }
+        try {
+            await signUp(newData)
+            history.push('/')
+        } catch (error) {
+            setNewError(error)
+        }
     }
     return (
         <>
@@ -76,13 +76,14 @@ const RegisterForm = ({ toLogin }) => {
             <FormComponent
                 onSubmit={handleSubmit}
                 validatorConfig={validatorConfig}
+                newError={newError}
             >
                 <TextField label="Электронная почта" name="email" />
                 <TextField label="Пароль" type="password" name="password" />
                 <SelectField
                     label="Выбери свою профессию"
                     defaultOption="Choose..."
-                    options={professions}
+                    options={normalizeProfession(professions)}
                     name="profession"
                 />
                 <RadioField
@@ -95,7 +96,7 @@ const RegisterForm = ({ toLogin }) => {
                     label="Выберите ваш пол"
                 />
                 <MultiSelectField
-                    options={qualities}
+                    options={normalizeQualities(qualitys)}
                     defaultValue={data.qualities}
                     name="qualities"
                     label="Выберите ваши качества"
