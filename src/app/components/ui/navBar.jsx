@@ -1,7 +1,10 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { useAuth } from '../../hooks/useAuth'
+import NavProfile from './navProfile'
 
 const NavBar = () => {
+    const { currentUser } = useAuth()
     const location = useLocation()
     const isActive = (path) => location.pathname === path
     const renderLink = ({ path, name }) => (
@@ -16,13 +19,39 @@ const NavBar = () => {
     )
     const links = [
         { path: '/', name: 'Main' },
-        { path: '/login', name: 'Login' },
-        { path: '/users', name: 'Users' },
+        { path: '/users', name: 'Users', auth: true },
     ]
+    const filterLinks = useMemo(() => {
+        return links.filter((link) => {
+            const { auth } = link
+            if (auth) {
+                return !!currentUser
+            }
+            return true
+        })
+    }, [currentUser])
     return (
-        <ul className="nav nav-pills mb-3">
-            {links.map((link) => renderLink(link))}
-        </ul>
+        <nav className="navbar">
+            <div className="container-fluid">
+                <ul className="nav nav-pills mb-3">
+                    {filterLinks.map((link) => renderLink(link))}
+                </ul>
+            </div>
+            <div className="d-flex">
+                {currentUser ? (
+                    <NavProfile />
+                ) : (
+                    <Link
+                        className={`nav-link ${
+                            isActive('/login') ? 'active' : ''
+                        }`}
+                        to="/login"
+                    >
+                        Login
+                    </Link>
+                )}
+            </div>
+        </nav>
     )
 }
 

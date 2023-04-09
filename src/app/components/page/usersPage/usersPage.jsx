@@ -9,6 +9,7 @@ import UsersTable from '../../ui/usersTable'
 import Search from '../../common/form/search'
 import { useUser } from '../../../hooks/useUsers'
 import { useProfession } from '../../../hooks/useProfession'
+import { useAuth } from '../../../hooks/useAuth'
 
 const UsersPage = () => {
     const PAGE_SIZE = 4
@@ -43,6 +44,7 @@ const UsersPage = () => {
     }
 
     const { users, isLoading } = useUser()
+    const { currentUser } = useAuth()
     const { isLoading: isProfessionLoading, professions } = useProfession()
     const [selectedProf, setSelectedProf] = useState()
     const [currentPage, setCurrentPage] = useState(1)
@@ -58,29 +60,32 @@ const UsersPage = () => {
         setCurrentPage(1)
     }, [searchText])
     /* eslint-disable */
-    const filteredUsers = () => {
+    const filterUsers = (users) => {
+        const filteredUsers = users.filter(
+            (user) => user._id !== currentUser._id
+        )
         if (selectedProf) {
-            return users.filter(
+            return filteredUsers.filter(
                 (profession) => profession.profession === selectedProf._id
             )
         }
         if (searchText) {
-            return users.filter((user) => {
+            return filteredUsers.filter((user) => {
                 const regex = new RegExp(searchText.toLowerCase(), 'g')
                 return regex.test(user.name.toLowerCase())
             })
         }
-        return users
+        return filteredUsers
     }
 
     const sortedUser = orderBy(
-        filteredUsers(),
+        filterUsers(users),
         [sortBy.path],
         [sortBy.reverse ? 'desc' : 'asc']
     )
 
     const userCrop = paginate(sortedUser, currentPage, PAGE_SIZE)
-    const itemCount = filteredUsers().length
+    const itemCount = filterUsers(users).length
 
     if (isLoading) return 'Loading...'
     return (

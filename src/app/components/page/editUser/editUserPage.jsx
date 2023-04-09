@@ -1,39 +1,48 @@
-import React, { useState, useEffect } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
-import api from '../../../api'
+import React from 'react'
+import { useHistory } from 'react-router-dom'
 import FormComponent, {
     TextField,
     SelectField,
     MultiSelectField,
     RadioField,
 } from '../../common/form'
-import { normalizeProfession } from '../../../utils/professions'
+import { useQuality } from '../../../hooks/useQuality'
+import { useProfession } from '../../../hooks/useProfession'
+import { useAuth } from '../../../hooks/useAuth'
 import { normalizeQualities } from '../../../utils/qualities'
-import { normalizeUser, getUser } from '../../../utils/user'
+import { normalizeProfession } from '../../../utils/professions'
 
 export default function EditUserPage() {
     const handleUpdateUser = (data) => {
-        api.users.update(id, getUser(data, qualities, professions))
-        history.push(`/users/${id}`)
+        history.push(`/users/${currentUser._id}`)
+        const user = {
+            ...data,
+            qualities: data.qualities.map((qualitie) => {
+                return qualitie.value
+            }),
+        }
+        updateUser(user)
     }
     const handleBack = () => {
-        history.push(`/users/${id}`)
+        history.push(`/users/${currentUser._id}`)
     }
-    const [user, setUser] = useState()
-    const [professions, setProfessions] = useState()
-    const [qualities, setQualities] = useState({})
-    const { id } = useParams()
+    const { qualitys, isLoading: qualitysLoading, getQuality } = useQuality()
+    const { professions, isLoading: pofessionLoading } = useProfession()
+    const { currentUser, updateUser } = useAuth()
     const history = useHistory()
-    useEffect(() => {
-        api.users.getById(id).then((data) => setUser(normalizeUser(data)))
-        api.professions
-            .fetchAll()
-            .then((data) => setProfessions(normalizeProfession(data)))
-        api.qualities
-            .fetchAll()
-            .then((data) => setQualities(normalizeQualities(data)))
-    }, [])
-    if (!user) return 'Загрузка'
+    const user = {
+        ...currentUser,
+        qualities: currentUser.qualities.map((qualitieId) => {
+            const qualitie = getQuality(qualitieId)
+            return {
+                value: qualitie._id,
+                label: qualitie.name,
+                color: qualitie.color,
+            }
+        }),
+    }
+
+    if (!currentUser && !qualitysLoading && !pofessionLoading) return 'Загрузка'
     return (
         <div className="w-75 mx-auto d-flex">
             <button
@@ -52,12 +61,12 @@ export default function EditUserPage() {
                 <TextField label="Имя" name="name" autoFocus />
                 <TextField label="email" name="email" />
                 <SelectField
-                    options={professions}
+                    options={normalizeProfession(professions)}
                     label={'Выбирите свою профессию'}
                     name={'profession'}
                 />
                 <MultiSelectField
-                    options={qualities}
+                    options={normalizeQualities(qualitys)}
                     label="Ваши качества"
                     name="qualities"
                     defaultValue={user.qualities}

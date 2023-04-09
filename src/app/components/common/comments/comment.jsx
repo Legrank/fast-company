@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
-import API from '../../../api'
+import { useUser } from '../../../hooks/useUsers'
+import { useAuth } from '../../../hooks/useAuth'
 
 function dateFormat(date) {
     const MINUTS30 = 30 * 60 * 1000
@@ -51,28 +52,16 @@ function Comment({ comment, removeComment }) {
     const handleRemove = () => {
         removeComment(comment._id)
     }
-    const [user, setUser] = useState()
-    const [isLoading, setIsLoading] = useState(true)
-    useEffect(() => {
-        API.users.getById(comment.userId).then((user) => {
-            setUser(user)
-            setIsLoading(false)
-        })
-    }, [])
-    if (isLoading) {
-        return <div className="bg-light card-body mb-3">Загрузка...</div>
-    }
+    const { getUserById } = useUser()
+    const { currentUser } = useAuth()
+    const user = getUserById(comment.userId)
     return (
         <div className="bg-light card-body mb-3">
             <div className="row">
                 <div className="col">
                     <div className="d-flex flex-start">
                         <img
-                            src={`https://avatars.dicebear.com/api/avataaars/${(
-                                Math.random() + 1
-                            )
-                                .toString(36)
-                                .substring(7)}.svg`}
+                            src={user.image}
                             className="rounded-circle shadow-1-strong me-3"
                             alt="avatar"
                             width="65"
@@ -89,14 +78,16 @@ function Comment({ comment, removeComment }) {
                                             )}
                                         </span>
                                     </p>
-                                    <button
-                                        className="btn btn-sm text-primary d-flex align-items-center"
-                                        onClick={handleRemove}
-                                    >
-                                        <i className="bi bi-x-lg"></i>
-                                    </button>
+                                    {currentUser._id === user._id && (
+                                        <button
+                                            className="btn btn-sm text-primary d-flex align-items-center"
+                                            onClick={handleRemove}
+                                        >
+                                            <i className="bi bi-x-lg"></i>
+                                        </button>
+                                    )}
                                 </div>
-                                <p className="small mb-0">{comment.content}</p>
+                                <p className="small mb-0">{comment.data}</p>
                             </div>
                         </div>
                     </div>

@@ -7,7 +7,7 @@ export const getProfessionById = (id, professions) => {
 }
 
 export const normalizeProfession = (data) =>
-    Object.values(data).map((profession) => ({
+    data.map((profession) => ({
         label: profession.name,
         value: profession._id,
     }))

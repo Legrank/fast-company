@@ -14,7 +14,7 @@ export const getQualities = (elements, qualities) => {
     return qualitiesArray
 }
 export const normalizeQualities = (data) =>
-    Object.values(data).map((option) => ({
+    data.map((option) => ({
         value: option._id,
         label: option.name,
         color: option.color,

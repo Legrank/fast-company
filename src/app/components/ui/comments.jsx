@@ -1,33 +1,22 @@
 import { orderBy } from 'lodash'
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { useParams } from 'react-router-dom'
-import API from '../../api'
 import { CommetsList, AddComment } from '../common/comments'
+import { useComments } from '../../hooks/useComments'
 
 function Comments() {
-    const handleAddComment = (userId, content) => {
-        API.comments
-            .add({ userId, content, pageId: id })
-            .then((newComment) => setComments((prev) => [...prev, newComment]))
+    const handleAddComment = (content) => {
+        createComment(content)
     }
     const handleRemoveComment = (id) => {
-        API.comments.remove(id).then((id) => {
-            setComments((prev) => prev.filter((x) => x._id !== id))
-        })
+        removeComment(id)
     }
     const { id } = useParams()
-    const [comments, setComments] = useState([])
-
-    useEffect(() => {
-        API.comments.fetchCommentsForUser(id).then((data) => {
-            setComments(data)
-        })
-    }, [])
+    const { createComment, comments, removeComment } = useComments()
     const sortedComments = orderBy(comments, ['created_at'], ['desc'])
     return (
         <>
             <AddComment pageId={id} addComment={handleAddComment} />
-
             {comments.length > 0 && (
                 <div className="card mb-3">
                     <div className="card-body">

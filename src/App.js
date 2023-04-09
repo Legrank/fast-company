@@ -10,6 +10,8 @@ import { ToastContainer } from 'react-toastify'
 import ProfessionProvider from './app/hooks/useProfession'
 import AuthProvider from './app/hooks/useAuth'
 import QualityProvider from './app/hooks/useQuality'
+import ProtectedRoute from './app/components/common/protectedRoute'
+import LogOut from './app/layouts/logOut'
 
 function App() {
     return (
@@ -22,12 +24,13 @@ function App() {
                             <Route path="/" exact component={Main} />
 
                             <Route path="/login/:type?" component={Login} />
-                            <Route
+                            <ProtectedRoute
                                 path="/users/:id?/:edit?"
                                 component={Users}
                             />
 
                             <Route path="/404" component={NotFound} />
+                            <Route path="/logout" component={LogOut} />
                             <Redirect to="/404" />
                         </Switch>
                     </QualityProvider>

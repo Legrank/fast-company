@@ -1,31 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
-import FormComponent, { SelectField, TextareaField } from '../form'
-import API from '../../../api'
-
-function userForSelect(users) {
-    return Object.values(users).map((user) => ({
-        label: user.name,
-        value: user._id,
-    }))
-}
+import FormComponent, { TextareaField } from '../form'
 
 function AddComment({ addComment }) {
-    const handleSubmit = ({ userId, content }) => {
-        addComment(userId, content)
+    const handleSubmit = ({ content }) => {
+        addComment(content)
     }
-    const [users, setUsers] = useState({})
-    useEffect(() => {
-        API.users.fetchAll().then((data) => {
-            setUsers(userForSelect(data))
-        })
-    }, [])
     const validatorConfig = {
-        userId: {
-            isRequired: {
-                message: 'Выбирите пользователя',
-            },
-        },
         content: {
             isRequired: {
                 message: 'Пустой коментарий',
@@ -43,12 +24,6 @@ function AddComment({ addComment }) {
                         resetForm={true}
                     >
                         <h2>New comment</h2>
-                        <SelectField
-                            name="userId"
-                            label=""
-                            options={users}
-                            defaultOption="Выберите пользователя"
-                        />
                         <TextareaField
                             label="Сообщение"
                             name="content"

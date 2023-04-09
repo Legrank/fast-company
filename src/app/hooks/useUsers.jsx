@@ -23,6 +23,9 @@ function UserProvider({ children }) {
         setError(message)
         setLoading(false)
     }
+    const getUserById = (id) => {
+        return users.find((user) => user._id === id)
+    }
     const [users, setUsers] = useState([])
     const [isLoading, setLoading] = useState(true)
     const [error, setError] = useState(null)
@@ -37,7 +40,7 @@ function UserProvider({ children }) {
         }
     }, [error])
     return (
-        <UserContext.Provider value={{ users, isLoading }}>
+        <UserContext.Provider value={{ users, isLoading, getUserById }}>
             {!isLoading ? children : 'Загрузка'}
         </UserContext.Provider>
     )

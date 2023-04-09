@@ -1,22 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useParams } from 'react-router-dom'
 
-import api from '../../../api'
 import Comments from '../../ui/comments'
 import MeetingsCard from '../../ui/meetingsCard'
 import QualitiesCard from '../../ui/qualitiesCard'
 import UserCard from '../../ui/userCard'
+import { useUser } from '../../../hooks/useUsers'
+import CommentsProvider from '../../../hooks/useComments'
 
 export default function UserPage() {
     const { id } = useParams()
-    const [user, setUser] = useState()
-
-    useEffect(() => {
-        api.users.getById(id).then((data) => {
-            console.log(id)
-            setUser(data)
-        })
-    }, [])
+    const { getUserById } = useUser()
+    const user = getUserById(id)
 
     // const handleGoAllUsers = () => {
     //     history.push('/users')
@@ -32,7 +27,9 @@ export default function UserPage() {
                     <MeetingsCard user={user} />
                 </div>
                 <div className="col-md-8">
-                    <Comments />
+                    <CommentsProvider>
+                        <Comments />
+                    </CommentsProvider>
                 </div>
             </div>
         </div>
