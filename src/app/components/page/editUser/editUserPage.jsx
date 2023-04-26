@@ -6,11 +6,19 @@ import FormComponent, {
     MultiSelectField,
     RadioField,
 } from '../../common/form'
-import { useQuality } from '../../../hooks/useQuality'
-import { useProfession } from '../../../hooks/useProfession'
 import { useAuth } from '../../../hooks/useAuth'
 import { normalizeQualities } from '../../../utils/qualities'
 import { normalizeProfession } from '../../../utils/professions'
+import { useSelector } from 'react-redux'
+import {
+    getQualitie,
+    getQualities,
+    getQualitiesLoadingStatus,
+} from '../../../store/qualities'
+import {
+    getProfessions,
+    getProfessionsLoadingStatus,
+} from '../../../store/professions'
 
 export default function EditUserPage() {
     const handleUpdateUser = (data) => {
@@ -26,14 +34,16 @@ export default function EditUserPage() {
     const handleBack = () => {
         history.push(`/users/${currentUser._id}`)
     }
-    const { qualitys, isLoading: qualitysLoading, getQuality } = useQuality()
-    const { professions, isLoading: pofessionLoading } = useProfession()
+    const qualitys = useSelector(getQualities())
+    const qualitysLoading = useSelector(getQualitiesLoadingStatus())
+    const professions = useSelector(getProfessions())
+    const pofessionLoading = useSelector(getProfessionsLoadingStatus())
     const { currentUser, updateUser } = useAuth()
     const history = useHistory()
     const user = {
         ...currentUser,
         qualities: currentUser.qualities.map((qualitieId) => {
-            const qualitie = getQuality(qualitieId)
+            const qualitie = useSelector(getQualitie(qualitieId))
             return {
                 value: qualitie._id,
                 label: qualitie.name,

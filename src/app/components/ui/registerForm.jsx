@@ -9,16 +9,17 @@ import FormComponent, {
     CheckBoxField,
     TextField,
 } from '../common/form'
-import { useQuality } from '../../hooks/useQuality'
-import { useProfession } from '../../hooks/useProfession'
 import { useAuth } from '../../hooks/useAuth'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
+import { useSelector } from 'react-redux'
+import { getQualities } from '../../store/qualities'
+import { getProfessions } from '../../store/professions'
 
 const RegisterForm = ({ toLogin }) => {
     const history = useHistory()
     const [data] = useState({})
-    const { qualitys } = useQuality()
-    const { professions } = useProfession()
+    const qualitys = useSelector(getQualities())
+    const professions = useSelector(getProfessions())
     const { signUp } = useAuth()
     const [newError, setNewError] = useState({})
     const validatorConfig = {

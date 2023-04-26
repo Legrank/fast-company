@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Route, Switch, Redirect } from 'react-router-dom'
 
 import NavBar from './app/components/ui/navBar'
@@ -7,34 +7,36 @@ import Login from './app/layouts/login'
 import Main from './app/layouts/main'
 import NotFound from './app/layouts/notFound'
 import { ToastContainer } from 'react-toastify'
-import ProfessionProvider from './app/hooks/useProfession'
 import AuthProvider from './app/hooks/useAuth'
-import QualityProvider from './app/hooks/useQuality'
 import ProtectedRoute from './app/components/common/protectedRoute'
 import LogOut from './app/layouts/logOut'
+import { useDispatch } from 'react-redux'
+import { loadQualitiesList } from './app/store/qualities'
+import { loadProfessionsList } from './app/store/professions'
 
 function App() {
+    const dispatch = useDispatch()
+    useEffect(() => {
+        dispatch(loadQualitiesList())
+        dispatch(loadProfessionsList())
+    }, [])
     return (
         <div className="App">
             <AuthProvider>
                 <NavBar />
-                <ProfessionProvider>
-                    <QualityProvider>
-                        <Switch>
-                            <Route path="/" exact component={Main} />
 
-                            <Route path="/login/:type?" component={Login} />
-                            <ProtectedRoute
-                                path="/users/:id?/:edit?"
-                                component={Users}
-                            />
+                <Switch>
+                    <Route path="/" exact component={Main} />
 
-                            <Route path="/404" component={NotFound} />
-                            <Route path="/logout" component={LogOut} />
-                            <Redirect to="/404" />
-                        </Switch>
-                    </QualityProvider>
-                </ProfessionProvider>
+                    <Route path="/login/:type?" component={Login} />
+                    <ProtectedRoute
+                        path="/users/:id?/:edit?"
+                        component={Users}
+                    />
+                    <Route path="/404" component={NotFound} />
+                    <Route path="/logout" component={LogOut} />
+                    <Redirect to="/404" />
+                </Switch>
             </AuthProvider>
             <ToastContainer />
         </div>

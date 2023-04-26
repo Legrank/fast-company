@@ -1,10 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { useQuality } from '../../../hooks/useQuality'
+import { useSelector } from 'react-redux'
+import {
+    getQualitie,
+    getQualitiesLoadingStatus,
+} from '../../../store/qualities'
 
 export default function Quality({ qualityId }) {
-    const { isLoading, getQuality } = useQuality()
-    const quality = getQuality(qualityId)
+    const quality = useSelector(getQualitie(qualityId))
+    const isLoading = useSelector(getQualitiesLoadingStatus())
     if (isLoading) {
         return 'Загрузка...'
     }

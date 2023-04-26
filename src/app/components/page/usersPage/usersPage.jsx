@@ -8,11 +8,17 @@ import GroupList from '../../common/groupList'
 import UsersTable from '../../ui/usersTable'
 import Search from '../../common/form/search'
 import { useUser } from '../../../hooks/useUsers'
-import { useProfession } from '../../../hooks/useProfession'
 import { useAuth } from '../../../hooks/useAuth'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+    getProfessions,
+    getProfessionsLoadingStatus,
+    loadProfessionsList,
+} from '../../../store/professions'
 
 const UsersPage = () => {
     const PAGE_SIZE = 4
+    const dispatch = useDispatch()
 
     const handleDelete = (userId) => {
         // const newUsers = users.filter((user) => user._id !== userId)
@@ -45,7 +51,8 @@ const UsersPage = () => {
 
     const { users, isLoading } = useUser()
     const { currentUser } = useAuth()
-    const { isLoading: isProfessionLoading, professions } = useProfession()
+    const professions = useSelector(getProfessions())
+    const isProfessionLoading = useSelector(getProfessionsLoadingStatus())
     const [selectedProf, setSelectedProf] = useState()
     const [currentPage, setCurrentPage] = useState(1)
     const [sortBy, setSortBy] = useState({ path: 'name', reverse: false })
@@ -59,6 +66,9 @@ const UsersPage = () => {
         if (searchText) setSelectedProf()
         setCurrentPage(1)
     }, [searchText])
+    useEffect(() => {
+        dispatch(loadProfessionsList())
+    }, [])
     /* eslint-disable */
     const filterUsers = (users) => {
         const filteredUsers = users.filter(
