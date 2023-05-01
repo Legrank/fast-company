@@ -1,7 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useParams, useHistory } from 'react-router-dom'
-import { useAuth } from '../../hooks/useAuth'
+import { useSelector } from 'react-redux'
+import { getCarrentUserId } from '../../store/users'
 
 function UserCard({ user }) {
     const handleEditUser = () => {
@@ -9,11 +10,11 @@ function UserCard({ user }) {
     }
     const history = useHistory()
     const { id } = useParams()
-    const { currentUser } = useAuth()
+    const carrentUserId = useSelector(getCarrentUserId())
     return (
         <div className="card mb-3">
             <div className="card-body">
-                {currentUser._id === user._id && (
+                {carrentUserId === user._id && (
                     <button
                         className="position-absolute top-0 end-0 btn btn-light btn-sm"
                         onClick={handleEditUser}

@@ -1,10 +1,11 @@
 import React, { useMemo } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { useAuth } from '../../hooks/useAuth'
 import NavProfile from './navProfile'
+import { useSelector } from 'react-redux'
+import { getIsLogIn } from '../../store/users'
 
 const NavBar = () => {
-    const { currentUser } = useAuth()
+    const isLoggedIn = useSelector(getIsLogIn())
     const location = useLocation()
     const isActive = (path) => location.pathname === path
     const renderLink = ({ path, name }) => (
@@ -25,11 +26,11 @@ const NavBar = () => {
         return links.filter((link) => {
             const { auth } = link
             if (auth) {
-                return !!currentUser
+                return !!isLoggedIn
             }
             return true
         })
-    }, [currentUser])
+    }, [isLoggedIn])
     return (
         <nav className="navbar">
             <div className="container-fluid">
@@ -38,7 +39,7 @@ const NavBar = () => {
                 </ul>
             </div>
             <div className="d-flex">
-                {currentUser ? (
+                {isLoggedIn ? (
                     <NavProfile />
                 ) : (
                     <Link

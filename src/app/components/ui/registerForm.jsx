@@ -9,18 +9,17 @@ import FormComponent, {
     CheckBoxField,
     TextField,
 } from '../common/form'
-import { useAuth } from '../../hooks/useAuth'
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { getQualities } from '../../store/qualities'
 import { getProfessions } from '../../store/professions'
+import { sungUp } from '../../store/users'
 
 const RegisterForm = ({ toLogin }) => {
-    const history = useHistory()
+    const dispath = useDispatch()
     const [data] = useState({})
     const qualitys = useSelector(getQualities())
     const professions = useSelector(getProfessions())
-    const { signUp } = useAuth()
+
     const [newError, setNewError] = useState({})
     const validatorConfig = {
         email: {
@@ -68,18 +67,13 @@ const RegisterForm = ({ toLogin }) => {
         },
     }
 
-    const handleSubmit = async (data) => {
+    const handleSubmit = (data) => {
         setNewError({})
         const newData = {
             ...data,
             qualities: data.qualities.map((quality) => quality.value),
         }
-        try {
-            await signUp(newData)
-            history.push('/')
-        } catch (error) {
-            setNewError(error)
-        }
+        dispath(sungUp(newData))
     }
     return (
         <>

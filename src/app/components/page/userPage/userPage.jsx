@@ -5,17 +5,13 @@ import Comments from '../../ui/comments'
 import MeetingsCard from '../../ui/meetingsCard'
 import QualitiesCard from '../../ui/qualitiesCard'
 import UserCard from '../../ui/userCard'
-import { useUser } from '../../../hooks/useUsers'
 import CommentsProvider from '../../../hooks/useComments'
+import { useSelector } from 'react-redux'
+import { getUserById } from '../../../store/users'
 
 export default function UserPage() {
     const { id } = useParams()
-    const { getUserById } = useUser()
-    const user = getUserById(id)
-
-    // const handleGoAllUsers = () => {
-    //     history.push('/users')
-    // }
+    const user = useSelector(getUserById(id))
 
     if (!user) return <div>Загрузка...</div>
     return (

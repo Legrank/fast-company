@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import UsersPage from '../components/page/usersPage'
 import UserPage from '../components/page/userPage'
 import EditUserPage from '../components/page/editUser'
-import UserProvider from '../hooks/useUsers'
+import UsersLoader from '../components/ui/hoc/usersLoader'
 
 export default function Users() {
     const { id, edit } = useParams()
@@ -15,5 +15,5 @@ export default function Users() {
     } else {
         component = <UsersPage />
     }
-    return <UserProvider>{component}</UserProvider>
+    return <UsersLoader>{component}</UsersLoader>
 }

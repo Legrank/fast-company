@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 import { validator } from '../../utils/validator'
 import FormComponent, { CheckBoxField, TextField } from '../common/form'
-import { useAuth } from '../../hooks/useAuth'
+import { useDispatch } from 'react-redux'
+import { login } from '../../store/users'
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 
 const LoginForm = ({ toRegister }) => {
     const history = useHistory()
+    const dispath = useDispatch()
     const [data] = useState({ email: '', password: '', stayOn: false })
     const [newError, setNewError] = useState({})
-    const { signIn } = useAuth()
     const validatorConfig = {
         email: {
             isRequired: {
@@ -43,18 +44,12 @@ const LoginForm = ({ toRegister }) => {
         return Object.keys(errors).length === 0
     }
 
-    const handleSubmit = async (data) => {
+    const handleSubmit = (data) => {
         setNewError({})
-        try {
-            await signIn(data)
-            history.push(
-                history.location.state
-                    ? history.location.state.from.pathname
-                    : '/'
-            )
-        } catch (error) {
-            setNewError(error)
-        }
+        const redirect = history.location.state
+            ? history.location.state.from.pathname
+            : '/'
+        dispath(login({ payload: data, redirect }))
     }
     return (
         <>

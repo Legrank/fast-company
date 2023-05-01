@@ -7,14 +7,17 @@ import Pagination from '../../common/pagination'
 import GroupList from '../../common/groupList'
 import UsersTable from '../../ui/usersTable'
 import Search from '../../common/form/search'
-import { useUser } from '../../../hooks/useUsers'
-import { useAuth } from '../../../hooks/useAuth'
 import { useDispatch, useSelector } from 'react-redux'
 import {
     getProfessions,
     getProfessionsLoadingStatus,
     loadProfessionsList,
 } from '../../../store/professions'
+import {
+    getCarrentUserId,
+    getUsersList,
+    getUsersLoadingStatus,
+} from '../../../store/users'
 
 const UsersPage = () => {
     const PAGE_SIZE = 4
@@ -49,8 +52,9 @@ const UsersPage = () => {
         setSearchText(e.target.value)
     }
 
-    const { users, isLoading } = useUser()
-    const { currentUser } = useAuth()
+    const users = useSelector(getUsersList())
+    const isLoading = useSelector(getUsersLoadingStatus())
+    const currentUserId = useSelector(getCarrentUserId())
     const professions = useSelector(getProfessions())
     const isProfessionLoading = useSelector(getProfessionsLoadingStatus())
     const [selectedProf, setSelectedProf] = useState()
@@ -71,9 +75,7 @@ const UsersPage = () => {
     }, [])
     /* eslint-disable */
     const filterUsers = (users) => {
-        const filteredUsers = users.filter(
-            (user) => user._id !== currentUser._id
-        )
+        const filteredUsers = users.filter((user) => user._id !== currentUserId)
         if (selectedProf) {
             return filteredUsers.filter(
                 (profession) => profession.profession === selectedProf._id

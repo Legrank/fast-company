@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { useUser } from '../../../hooks/useUsers'
-import { useAuth } from '../../../hooks/useAuth'
+import { useSelector } from 'react-redux'
+import { getCarrentUserId, getUserById } from '../../../store/users'
 
 function dateFormat(date) {
     const MINUTS30 = 30 * 60 * 1000
@@ -52,9 +52,8 @@ function Comment({ comment, removeComment }) {
     const handleRemove = () => {
         removeComment(comment._id)
     }
-    const { getUserById } = useUser()
-    const { currentUser } = useAuth()
-    const user = getUserById(comment.userId)
+    const user = useSelector(getUserById(comment.userId))
+    const currentUserId = useSelector(getCarrentUserId())
     return (
         <div className="bg-light card-body mb-3">
             <div className="row">
@@ -78,7 +77,7 @@ function Comment({ comment, removeComment }) {
                                             )}
                                         </span>
                                     </p>
-                                    {currentUser._id === user._id && (
+                                    {currentUserId === user._id && (
                                         <button
                                             className="btn btn-sm text-primary d-flex align-items-center"
                                             onClick={handleRemove}

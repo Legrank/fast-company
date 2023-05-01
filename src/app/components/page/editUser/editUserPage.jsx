@@ -6,10 +6,9 @@ import FormComponent, {
     MultiSelectField,
     RadioField,
 } from '../../common/form'
-import { useAuth } from '../../../hooks/useAuth'
 import { normalizeQualities } from '../../../utils/qualities'
 import { normalizeProfession } from '../../../utils/professions'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {
     getQualitie,
     getQualities,
@@ -19,8 +18,10 @@ import {
     getProfessions,
     getProfessionsLoadingStatus,
 } from '../../../store/professions'
+import { getCarrentUserData, updateUser } from '../../../store/users'
 
 export default function EditUserPage() {
+    const dispatch = useDispatch()
     const handleUpdateUser = (data) => {
         history.push(`/users/${currentUser._id}`)
         const user = {
@@ -29,7 +30,7 @@ export default function EditUserPage() {
                 return qualitie.value
             }),
         }
-        updateUser(user)
+        dispatch(updateUser(user))
     }
     const handleBack = () => {
         history.push(`/users/${currentUser._id}`)
@@ -38,7 +39,7 @@ export default function EditUserPage() {
     const qualitysLoading = useSelector(getQualitiesLoadingStatus())
     const professions = useSelector(getProfessions())
     const pofessionLoading = useSelector(getProfessionsLoadingStatus())
-    const { currentUser, updateUser } = useAuth()
+    const currentUser = useSelector(getCarrentUserData())
     const history = useHistory()
     const user = {
         ...currentUser,
