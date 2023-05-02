@@ -2,15 +2,14 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { validator } from '../../utils/validator'
 import FormComponent, { CheckBoxField, TextField } from '../common/form'
-import { useDispatch } from 'react-redux'
-import { login } from '../../store/users'
+import { useDispatch, useSelector } from 'react-redux'
+import { getAuthError, login } from '../../store/users'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 
 const LoginForm = ({ toRegister }) => {
     const history = useHistory()
     const dispath = useDispatch()
     const [data] = useState({ email: '', password: '', stayOn: false })
-    const [newError, setNewError] = useState({})
     const validatorConfig = {
         email: {
             isRequired: {
@@ -36,6 +35,7 @@ const LoginForm = ({ toRegister }) => {
             },
         },
     }
+    const loginError = useSelector(getAuthError())
     useEffect(() => {
         validate()
     }, [data])
@@ -45,7 +45,6 @@ const LoginForm = ({ toRegister }) => {
     }
 
     const handleSubmit = (data) => {
-        setNewError({})
         const redirect = history.location.state
             ? history.location.state.from.pathname
             : '/'
@@ -57,7 +56,7 @@ const LoginForm = ({ toRegister }) => {
             <FormComponent
                 validatorConfig={validatorConfig}
                 onSubmit={handleSubmit}
-                newError={newError}
+                newError={{ password: loginError }}
             >
                 <TextField label="Электронная почта" name="email" />
                 <TextField label="Пароль" type="password" name="password" />

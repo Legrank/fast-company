@@ -4,6 +4,7 @@ import userService from '../services/user.service'
 import authService from '../services/auth.service'
 import localStorageService from '../services/localStorage.service'
 import history from '../utils/history'
+import { genereteAuthError } from '../utils/generateAuthError'
 
 function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min)
@@ -62,6 +63,9 @@ const usersSlice = createSlice({
             )
             state.entities[index] = actions.payload
         },
+        authRequested: (state) => {
+            state.error = null
+        },
     },
 })
 
@@ -92,7 +96,13 @@ export const login =
             localStorageService.setTokens(data)
             history.push(redirect)
         } catch (error) {
-            dispatch(authRequestFiled(error.message))
+            const { code, message } = error.response.data.error
+            if (code === 400) {
+                const errorMessage = genereteAuthError(message)
+                dispatch(authRequestFiled(errorMessage))
+            } else {
+                dispatch(authRequestFiled(error.message))
+            }
         }
     }
 export const sungUp =
@@ -169,5 +179,6 @@ export const getCarrentUserData = () => (state) => {
           )
         : null
 }
+export const getAuthError = () => (state) => state.users.error
 
 export default usersReducer
