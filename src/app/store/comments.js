@@ -78,7 +78,7 @@ export const removeComment = (commentId) => async (dispatch) => {
             dispatch(commentRemoveReceived(commentId))
         }
     } catch (error) {
-        dispatch(commentRemoveRequestFiled())
+        dispatch(commentRemoveRequestFiled(error.message))
     }
 }
 
